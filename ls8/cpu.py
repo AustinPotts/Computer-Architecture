@@ -7,28 +7,31 @@ class CPU:
 
     def __init__(self):
         """Construct a new CPU."""
+        self.ram = [0] * 256
+        self.reg = [0] * 8
+        self.flag = 0
+        self.pc = 0
+        self.running = True
+
         pass
 
     def load(self):
         """Load a program into memory."""
 
-        address = 0
+        filename = sys.argv[1]
+        address = 0 # number command 
 
-        # For now, we've just hardcoded a program:
-
-        program = [
-            # From print8.ls8
-            0b10000010, # LDI R0,8
-            0b00000000,
-            0b00001000,
-            0b01000111, # PRN R0
-            0b00000000,
-            0b00000001, # HLT
-        ]
-
-        for instruction in program:
-            self.ram[address] = instruction
-            address += 1
+         with open(filename) as f:
+             for line in f:
+                 line = line.split('#')[0].strip()
+                 if line == '':
+                     continue
+                 try:
+                     v = int(line, 2) # instruction 
+                 except ValueError:
+                     continue
+                 self.ram_write(address, v)
+                 address += 1 # Increment after we load it up 
 
 
     def alu(self, op, reg_a, reg_b):
@@ -60,6 +63,22 @@ class CPU:
 
         print()
 
+        ## Step 2: Add RAM functions
+
     def run(self):
-        """Run the CPU."""
-        pass
+         while self.running:
+             ir = self.ram_read(self.pc)
+             pc_flag = (ir & 0b00010000) >> 4
+             reg_num1 = self.ram[self.pc +1]
+             reg_num2 = self.ram[self.pc + 2]
+             self.branch_table[ir](reg_num1, reg_num2)
+             if pc_flag == 0:
+                 move = int((ir & 0b11000000) >>6)
+                 self.pc += move + 1
+
+
+     def ram_read(self, address):
+         return self.ram[address]
+
+     def ram_write(self, address, value):
+         self.ram[address] = value

@@ -1,0 +1,155 @@
+
+
+AND, OR, NOT, XOR
+
+
+Operation     Boolean Operator      Bitwise Operation
+AND               && (and)                &
+OR                 ||  (or)               |    
+NOT                ! (not)                ~
+XOR                none!                  ^
+
+
+if (true and true): This is AND 
+
+if (true or false):
+
+if !(True)
+
+
+Binary Bit 
+
+AND THEM Together 
+"AND WILL RETURN TRUE IF BOTH ARE TRUE"
+
+  0b1010101     // 1 is true, 0 is false 
+& 0b1000101
+----------------
+           0b1101101
+
+
+
+
+  0b0011100
+& 0b1010101
+--------------
+        0b010110
+
+
+
+
+OR THEM Together 
+"OR WILL RETURN TRUE IF ONE IS TRUE (1)"
+
+  0b0011100
+| 0b1010101
+------------
+           0b1011101
+
+
+
+
+NOT 
+  0b0011100
+~ 0b1010101
+------------
+  0b1
+
+
+
+XOR 
+True xor False ---> True 
+True xor True ----> False 
+False xor False ----> False
+Its true if exactly one statement is true, there can only be one 
+
+
+  0b0011100
+^ 0b1010101
+-----------
+   0b001001
+
+
+0b0011100
+0b1010101
+-----------
+ 0b1001001
+
+
+
+
+SHIFTING
+shove to the right 
+there is wall 
+
+RIGHT SHIFTING
+0b1010101 >> 1 = 0b101010
+
+0b1010101 >> 2 = 0b10101
+
+0b1010101 >> 3 = 0b1010
+
+LEFT SHIFTING 
+helps us isolate bits we're interested in 
+No deleting, just adding 0's
+0b1010101 << 1 = 0b10101010
+0b1010101 << 2 = 0b101010100
+0b1010101 << 3 = 0b1010101000
+
+
+How to isolate bits we are interested in?
+0b1010101
+We could shove to the right so all but 10 get chopped off 
+
+I.E 0b1010101 >> 6
+
+What if we want middle values?
+we can AND it together 
+I put 0 where i dont care where a number is 
+    
+0b10101010 >> 3 = 0b10101
+                      
+
+Masking!
+1010
+0011
+-----
+0010
+
+
+      0b10101
+  &     00011
+  ----------
+  00001
+
+
+
+
+
+
+  Use our knowledge to shift the operands of interest - Check Repo
+
+  AABBCCDD
+  ADD takes register1 register2
+  10100000
+
+  How would we isolate? 
+  We could shive it to the right 
+  10100000 >> 6 
+
+Python will do math with binary 
+pc += 1 + (command >> 6)
+
+HALT
+  00000001
+
+if command == add:
+     pc += 2
+
+
+memory = [
+    ADD,
+    register1,
+    register2,
+    HALT
+]
