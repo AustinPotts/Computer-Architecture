@@ -31,14 +31,7 @@ class CPU:
         self.flag = 0
         self.pc = 0 # program counter
         self.running = True 
-        self.branch_table = { # a method of transferring program control, makes things cleaner
-             HLT : self.HLT,
-             PRN : self.PRN,
-             LDI : self.LDI,
-             MUL : self.MUL,
-             PUSH : self.PUSH,
-             POP : self.POP
-         }
+     
         
 
         
@@ -161,18 +154,40 @@ class CPU:
     # This is the workhorse function of the entire processor
     # It needs to read the memory address that's stored in register PC, 
     # and store that result in IR, the Instruction Register.
-    def run(self):
-         while self.running: # while we are running 
-             # Instruction Reader = the place counter in Ram pointing at instruction 
-             ir = self.ram_read(self.pc)  # read memory address and store in IR Instruction Register
-             pc_flag = (ir & 0b00010000) >> 4 # shift right, checking for 1 in spot (r4)
-             reg_num1 = self.ram[self.pc +1] # Using ram_read(), read the bytes at PC+1 and PC+2 from RAM into variables operand_a and operand_b
-             reg_num2 = self.ram[self.pc + 2]
-             self.branch_table[ir](reg_num1, reg_num2) # Run instruction 
-             if pc_flag == 0:
-                 move = int((ir & 0b11000000) >>6) # shift right 6 places checking for 1 spot
-                 self.pc += move + 1 # After running code for any particular instruction, the PC needs to be updated
-                                     # to point to the next instruction for the next iteration of the loop in run()
+    def run2(self):
+        # Pull out each command as we go 
+        
+        
+        
+        while self.running:
+           # lets use a pointer into the array (Program Counter) count where we our in the execution of the program
+           command = self.ram[self.pc] # our command in the program is wherever that counter is pointing
+
+           operand_a = self.ram_read(self.pc + 1) # Place Counter value 1
+           operand_b = self.ram_read(self.pc + 2) # Place Counter value 2
+
+           # Set the value of a register to an integer.
+           if command == LDI:
+               self.reg[operand_a] = operand_b
+               self.pc += 3
+           # Print numeric value stored in the given register.   
+           elif command == PRN: # this operation is 2 bytes 
+               print(self.reg[operand_a])
+               self.pc += 2    
+           elif command == MUL:
+               print("MULLIGAN")
+               print(operand_a)
+               print(operand_b)
+               # Multiply the values in two registers together and store the result in registerA.
+               self.reg[operand_a] = self.reg[operand_a] * self.reg[operand_b]    
+               # Increment place counter else infinite loop   
+               self.pc += 3
+           elif command == HLT:
+               sys.exit(0)
+           else:
+                print(f"Run2 Did Not Work")
+                sys.exit(1) 
+           
 
     # access the RAM inside the CPU object.
 
