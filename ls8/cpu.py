@@ -31,6 +31,7 @@ class CPU:
         self.flag = 0
         self.pc = 0 # program counter
         self.running = True 
+        self.SP = 0b00000111
      
         
 
@@ -182,6 +183,28 @@ class CPU:
                self.reg[operand_a] = self.reg[operand_a] * self.reg[operand_b]    
                # Increment place counter else infinite loop   
                self.pc += 3
+           elif command == PUSH:
+                 # print("PUSHIN")
+                 # get the register number
+                 # operand_a = self.ram_read(self.pc + 1)
+                 operand_a = operand_a #Register whose value is to be pushed on stack
+                 
+                 # Ram Write the Stack Pointer & operand_a
+                 self.ram_write(self.SP, self.reg[operand_a]) 
+                 
+                 self.pc += 2 # Increment by 2 because this is a 2 byte operation
+
+                 # decrement the stack pointer
+                 self.SP -= 1
+                # print(self.SP)
+
+           elif command == POP:
+               operand_a = self.ram_read(self.pc + 1)  # Register in which stack value is to be popped
+               self.reg[operand_a] = self.ram_read(self.SP+1)
+               self.SP += 1
+               self.pc += 2
+
+
            elif command == HLT:
                sys.exit(0)
            else:
