@@ -95,7 +95,7 @@ F # 15
 (3 * 16) + 15 = ... 48 + 15 = 63
 
 
-#Convert the Decimal to Hexadecimal 
+# Convert the Decimal to Hexadecimal 
 # Devide by 16 
 54 
 

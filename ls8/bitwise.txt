@@ -8,13 +8,13 @@ AND               && (and)                &
 OR                 ||  (or)               |    
 NOT                ! (not)                ~
 XOR                none!                  ^
-
+1111111 = open
 
 if (true and true): This is AND 
 
-if (true or false):
+if (true or false): This is OR
 
-if !(True)
+if !(True): This is NOT
 
 
 Binary Bit 

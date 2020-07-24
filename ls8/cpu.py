@@ -16,6 +16,11 @@ ADD = 0b10100000
 PUSH = 0b01000101
 POP = 0b01000110
 
+JMP = 0b01010100
+CMP = 0b10100111
+JEQ = 0b01010101 # If `equal` flag is set (true), jump to the address stored in the given register.
+JNE = 0b01010110 # If `E` flag is clear (false, 0), jump to the address stored in the given register.
+
 
 
 # Why is it called LS8? 
@@ -37,6 +42,7 @@ class CPU:
         self.pc = 0 # program counter
         self.running = True 
         self.SP = 0b00000111
+        self.Flag = 0
      
         
 
@@ -266,7 +272,44 @@ class CPU:
 
                self.pc = return_address 
                # print(self.pc, self.pc) 
+           elif command == JMP:
+                operand_a = self.ram_read(self.pc + 1)  # Register hold PC where to jump
+
+                self.pc = self.reg[operand_a]  # Jump to instruction pointed in JMP
+
+           # Compare the values in two registers. CMP
+           elif command == CMP:
+                operand_a = self.reg[self.ram_read(self.pc + 1)]  # Register where to write
+                operand_b = self.reg[self.ram_read(self.pc + 2)]  # Value to write
+                self.Flag = 0
+                 # If they are equal, set the Equal `E` flag to 1, otherwise set it to 0.
+                if operand_a == operand_b:
+                    self.Flag = self.Flag | 0x1 # returns 1 if any of the bits is 1
+                # If registerA is less than registerB, set the Less-than `L` flag to 1,
+                # otherwise set it to 0.    
+                elif operand_a > operand_b:
+                    self.Flag = self.Flag | 0x2
+                else:
+                    self.Flag = self.Flag | 0x4
+
+                self.pc += 3
                 
+
+           # If `E` flag is clear (false, 0), jump to the address stored in the given register.
+           elif command == JNE:
+                operand_a = self.ram_read(self.pc + 1)  # Register hold PC where to jump
+                if self.Flag & 0x1 == 0:
+                    self.pc = self.reg[operand_a]  # Jump to instruction pointed in CALL
+                else:
+                     self.pc += 2
+           
+           # If `equal` flag is set (true), jump to the address stored in the given register.
+           elif command == JEQ:
+                operand_a = self.ram_read(self.pc + 1)  # Register hold PC where to jump
+                if self.Flag & 0x1 == 1:
+                    self.pc = self.reg[operand_a]  # Jump to instruction pointed in CALL
+                else:
+                    self.pc += 2    
 
 
 
